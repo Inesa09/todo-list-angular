@@ -30,4 +30,8 @@ export class AppComponent {
   get todos(): Todo[] {
     return this.todoDataService.getAllTodos();
   }
+
+  get notCompleted(): number {
+    return Number(this.todoDataService.notCompleted);
+  }
 }

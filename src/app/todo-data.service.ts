@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {Todo} from './todo';
+import { Todo } from './todo';
 
 @Injectable()
 export class TodoDataService {
@@ -12,6 +12,8 @@ export class TodoDataService {
   // Placeholder for todos
   todos: Todo[] = [];
 
+  notCompleted: number = 0;
+
   constructor() {
   }
 
@@ -21,13 +23,14 @@ export class TodoDataService {
       todo.id = ++this.lastId;
     }
     this.todos.push(todo);
+    this.setNotCompleted();
     return this;
   }
 
   // Simulate DELETE /todos/:id
   deleteTodoById(id: number): TodoDataService {
-    this.todos = this.todos
-      .filter(todo => todo.id !== id);
+    this.todos = this.todos.filter(todo => todo.id !== id);
+    this.setNotCompleted();
     return this;
   }
 
@@ -38,6 +41,7 @@ export class TodoDataService {
       return null;
     }
     Object.assign(todo, values);
+    this.setNotCompleted();
     return todo;
   }
 
@@ -54,11 +58,17 @@ export class TodoDataService {
   }
 
   // Toggle todo complete
-  toggleTodoComplete(todo: Todo){
+  toggleTodoComplete(todo: Todo) {
     let updatedTodo = this.updateTodoById(todo.id, {
       complete: !todo.complete
     });
+    this.setNotCompleted();
     return updatedTodo;
+  }
+
+  // Get quantity of not completed todos
+  setNotCompleted(){
+    this.notCompleted = this.todos.filter(todo => todo.complete === false).length;
   }
 
 }
